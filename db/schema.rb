@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_10_11_154644) do
+ActiveRecord::Schema.define(version: 2024_10_16_012202) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,6 +20,22 @@ ActiveRecord::Schema.define(version: 2024_10_11_154644) do
     t.text "content"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "class_lists", force: :cascade do |t|
+    t.string "c_name"
+    t.integer "c_account"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "class_statuses", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "class_list_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["class_list_id"], name: "index_class_statuses_on_class_list_id"
+    t.index ["user_id"], name: "index_class_statuses_on_user_id"
   end
 
   create_table "comments", force: :cascade do |t|
@@ -64,6 +80,8 @@ ActiveRecord::Schema.define(version: 2024_10_11_154644) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "class_statuses", "class_lists"
+  add_foreign_key "class_statuses", "users"
   add_foreign_key "comments", "articles"
   add_foreign_key "reviews", "products"
 end

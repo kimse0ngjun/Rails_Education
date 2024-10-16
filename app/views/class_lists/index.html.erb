@@ -1,0 +1,27 @@
+<p id="notice"><%= notice %></p>
+
+<h1>강의 리스트</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>강의명</th>
+      <th>수강인원현황</th>
+      <th>비고</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @class_lists.each do |class_list| %>
+      <tr>
+        <td><%= class_list.c_name %></td>
+		<td><%= ClassStatus.where(class_list_id: class_list.id).size %> / <%= class_list.c_account %></td>
+		<td><%= button_to "강의신청", class_statuses_path(class_status: { user_id: current_user.id, class_list_id: class_list.id } ) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Class List', new_class_list_path %>

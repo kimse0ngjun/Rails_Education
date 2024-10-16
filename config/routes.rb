@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :class_statuses
+  resources :class_lists
   resources :products do
   # resources :articles do
 	resources :reviews, only: [:create]
@@ -9,6 +11,7 @@ Rails.application.routes.draw do
   resources :tests
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   # root 'tests#index'
-  root 'products#index'
+  # root 'products#index'
+  root 'class_lists#index'
 	
 end
