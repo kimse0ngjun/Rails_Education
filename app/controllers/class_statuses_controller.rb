@@ -28,7 +28,7 @@ class ClassStatusesController < ApplicationController
 
     respond_to do |format|
       if @class_status.save
-        format.html { redirect_to @class_status, notice: 'Class status was successfully created.' }
+        format.html { redirect_to @class_status, notice: '강의 신청이 완료되었습니다.' }
         format.json { render :show, status: :created, location: @class_status }
       else
         format.html { render :new }
