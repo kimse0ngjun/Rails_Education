@@ -25,14 +25,28 @@ class ClassStatusesController < ApplicationController
   # POST /class_statuses.json
   def create
     @class_status = ClassStatus.new(class_status_params)
-
-    respond_to do |format|
-      if @class_status.save
-        format.html { redirect_to @class_status, notice: '강의 신청이 완료되었습니다.' }
-        format.json { render :show, status: :created, location: @class_status }
+	user_id = @class_status.user_id
+	class_id = @class_status.class_list_id
+	  
+	@class_status_overlap = ClassStatus.where(user_id: user_id, class_list_id: class_id).size
+	@class_status_size = ClassStatus.where(class_list_id: class_id.size)
+	  
+	puts "현재 사이즈 수 : #{@class_status_overlap}"
+	puts "유저ID : #{user_id}"
+	puts "강의ID : #{class_id}"
+	  
+    respond_to do |format|	
+	  if ClassStatus.applied?(user_id, class_id)
+		format.html { redirect_to root_path, notice: '중복신청은 되지 않습니다.'}
+		  
+	  elsif ClassStatus.exceeds_capacity?(class_id)
+		  format.html { redirect_to root_path, notice: '수강인원을 초과할 수 없습니다. '}
+		  
+	  elsif ClassStatus.exceeds_credit?(user_id)
+		  format.html { redirect_to root_path, notice: '20학점 이상 수강할 수 없습니다.'}
       else
-        format.html { render :new }
-        format.json { render json: @class_status.errors, status: :unprocessable_entity }
+		@class_status.save
+        format.html { redirect_to root_path, notice: '강의 신청이 완료되었습니다.' }
       end
     end
   end
@@ -50,19 +64,24 @@ class ClassStatusesController < ApplicationController
       end
     end
   end
+	
+	  
 
   # DELETE /class_statuses/1
   # DELETE /class_statuses/1.json
   def destroy
-    @class_status.destroy
-    respond_to do |format|
-      format.html { redirect_to class_statuses_url, notice: 'Class status was successfully destroyed.' }
+	  user_id = @class_status.user_id
+	  class_list_id = @class_status.class_list_id
+      
+	  ClassStatus.minus_credits(user_id, class_list_id)
+	  
+	  @class_status.destroy
+      respond_to do |format|
+      format.html { redirect_to class_lists_url, notice: '강의신청이 취소됨. 학점이 차감되었습니다.' }
       format.json { head :no_content }
     end
   end
-
-  private
-    # Use callbacks to share common setup or constraints between actions.
+	
     def set_class_status
       @class_status = ClassStatus.find(params[:id])
     end

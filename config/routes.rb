@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :class_statuses
+  resources :class_statuses 
   resources :class_lists
   resources :products do
   # resources :articles do
