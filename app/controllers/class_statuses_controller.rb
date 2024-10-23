@@ -20,7 +20,12 @@ class ClassStatusesController < ApplicationController
   # GET /class_statuses/1/edit
   def edit
   end
-
+	
+  # 새로운 action 정의
+  def show_users
+	  @class_list = ClassList.find(params[:class_list_id])
+	  @users = @class_list.users
+  end
   # POST /class_statuses
   # POST /class_statuses.json
   def create

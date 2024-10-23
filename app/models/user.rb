@@ -6,4 +6,5 @@ class User < ApplicationRecord
   
   has_many :class_statuses
   has_many :class_lists, :through => :class_statuses
+	
 end
